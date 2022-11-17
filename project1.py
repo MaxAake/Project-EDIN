@@ -1,11 +1,14 @@
 
-from math import floor, sqrt, gcd
+from math import ceil, floor, sqrt, gcd
 import subprocess
+import time
 
 
 N = 89692892892645583511288289
 Nsmall = 114450059
-def findR(N, L): 
+
+
+def findR(N, L):
     F = findPrimes(L + 5)
     triedNums = set()
     computedNums = []
@@ -15,7 +18,7 @@ def findR(N, L):
     k = 1
     while(len(triedNums) < L - 5):
         r = floor(sqrt(k*N) + j)
-        rMod = (r**2)%N
+        rMod = (r**2) % N
         [works, factors] = factor(rMod, F)
         computedNum = 1
         for fac in factors:
@@ -48,7 +51,7 @@ def findR(N, L):
     subprocess.call(["GaussBin.exe", "MyFile.txt", "outFile.txt"])
     file2 = open("outFile.txt", "r")
     lines = file2.readlines()
-    for line in lines[1 : len(lines)]:
+    for line in lines[1: len(lines)]:
         characters = line.split()
         prodX = 1
         prodY = 1
@@ -58,9 +61,11 @@ def findR(N, L):
                 prodX = prodX * rModList[i]
         tryFactor = gcd(prodY - prodX, N)
         if tryFactor != 1:
-            print("Possible factor: " + str(tryFactor) + "\n Other factor would be: " + str(N/tryFactor) + " remainder: " + str(N%tryFactor))
+            print("Possible factor: " + str(tryFactor) + "\n Other factor would be: " +
+                  str(N/tryFactor) + " remainder: " + str(N % tryFactor))
             break
-        
+
+
 def factor(rMod, smoothPrimes):
     factors = []
     for prime in smoothPrimes:
@@ -75,6 +80,7 @@ def factor(rMod, smoothPrimes):
     else:
         return [True, factors]
 
+
 def findPrimes(L):
     primes = [2]
     i = 3
@@ -87,5 +93,8 @@ def findPrimes(L):
             primes.append(i)
         i += 2
     return primes
-    
-findR(testNum, 1000)
+
+
+startTime = time.time()
+findR(N, 1000)
+print("Time to run: " + str(ceil(time.time() - startTime)) + " seconds.")
