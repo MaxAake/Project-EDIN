@@ -7,11 +7,12 @@ F5 = [2, 0, 2, 1]
 F2 = [0, 0, 1, 1] # x^4 + x + 1
 
 resultString = ""
+fiveString = ""
 working5 = [0, 0, 0, 1]
 working2 = [0, 0, 0, 1]
 
 def coolF(numFromFive, numFromTwo):
-    return numFromFive + numFromTwo * 5
+    return numFromFive *2 + numFromTwo 
 
 def cycle(arr):
     for i in range(3):
@@ -45,11 +46,13 @@ for _ in range(10003):
         for i in range(4):
             working5[i] += (taken5 * F5[i]) * 2  #times three as it is the multiplicative inverse of 2 (the coefficient of x^4)
             working5[i] = working5[i]%5
-        
-    print(taken2)
+    print(working5)
+    fiveString += str(taken5)
 
 printFile = open("./printFile.txt", "w")
 printFile.write(resultString)
+printFile = open("./fuckaround.txt", "w")
+printFile.write(fiveString)
 print(resultString)
 
 
