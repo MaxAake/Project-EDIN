@@ -1,18 +1,17 @@
 
-import subprocess
 
-# 2x^4+2x^3+2x+1
-# x^4 + 2*x^3 + 0*x^2 + x + 3
-F5 = [2, 0, 2, 1]  
-F2 = [0, 0, 1, 1] # x^4 + x + 1
+
+F5 = [2, 0, 2, 1] # 2x^4+2x^3+2x+1
+F2 = [0, 0, 1, 1]  # x^4 + x + 1
 
 resultString = ""
-twoString = ""
 working5 = [0, 0, 0, 0]
 working2 = [0, 0, 0, 0]
 
+
 def coolF(numFromFive, numFromTwo):
-    return numFromFive *2 + numFromTwo 
+    return numFromFive * 2 + numFromTwo
+
 
 def cycle(arr):
     for i in range(3):
@@ -20,41 +19,36 @@ def cycle(arr):
     arr[3] = 0
     return arr
 
+
+def generateDeBruijn(sequence, field, taken):
+    if(sequence == [0, 0, 0, 0]):
+        sequence = [0, 0, 0, 1]
+    elif(sequence == [1, 0, 0, 1] and field == 2 or
+         sequence == [3, 3, 0, 3] and field == 5):
+        sequence = [0, 0, 0, 0]
+    else:
+        sequence = cycle(sequence)
+        coeff = 0
+        if(field == 2):
+            coeff = 1
+            poly = F2
+        if field == 5:
+            coeff = 2
+            poly = F5
+        for i in range(4):
+            sequence[i] += taken * poly[i] * coeff
+            sequence[i] = sequence[i] % field
+    return sequence
+
+
 for _ in range(10003):
     taken5 = working5[0]
     taken2 = working2[0]
     newNumber = coolF(taken5, taken2)
     resultString += str(newNumber)
-    if working2 == [0, 0, 0, 0]:
-        working2 = [0, 0, 0, 1]
-    elif working2 == [1, 0, 0, 1]: 
-        working2 = [0, 0, 0, 0]
-    else:
-        working2 = cycle(working2)
-        for i in range(4):
-            working2[i] += taken2 * F2[i]
-            working2[i] = working2[i]%2
-    if working5 == [0, 0, 0, 0]:
-        working5 = [0, 0, 0, 1]
-        # 2 1 2 3 for 2x^4+2x^3+2x+1
-        # 3 1 2 3 for x^4 + 2*x^3 + 0*x^2 + x + 3
-    elif working5 == [3, 3, 0, 3]:
-        working5 = [0, 0, 0, 0]
-    else:
-        working5 = cycle(working5)
-        
-        for i in range(4):
-            working5[i] += (taken5 * F5[i]) * 2  #times three as it is the multiplicative inverse of 2 (the coefficient of x^4)
-            working5[i] = working5[i]%5
-    print(working2)
-    twoString += str(taken2)
+    working2 = generateDeBruijn(working2, 2, taken2)
+    working5 = generateDeBruijn(working5, 5, taken5)
 
 printFile = open("./printFile.txt", "w")
 printFile.write(resultString)
-printFile = open("./fuckaround2.txt", "w")
-printFile.write(twoString)
 print(resultString)
-
-
-
-    
